@@ -1,5 +1,7 @@
 
 
+
+
 <!DOCTYPE html>
 
 <html lang="id"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/><meta content="#08111e" name="theme-color"/><title>FMY01 V4 | Futures Trading Intelligence</title><style>
@@ -8,7 +10,8 @@
 .v4panel{margin:14px 0}.v4grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:12px}.v4grid .mini{min-height:86px}.v4label{font-size:12px;color:var(--dim);display:block}.v4value{font-size:21px;font-weight:750;display:block;margin-top:7px}.v4row{display:flex;flex-wrap:wrap;gap:12px;align-items:end}.v4row>div{flex:1;min-width:145px}.v4row input{max-width:300px}.v4warning{margin-top:12px;padding:9px;background:#292520;border-radius:8px;color:#edc988;font-size:12px}@media(max-width:780px){.v4grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 
 .fmy-print-report{display:none}@media print{body{background:white!important;color:#111!important;font:10px Arial,sans-serif!important}body>*:not(.fmy-print-report){display:none!important}.fmy-print-report{display:block!important;padding:10mm}.fmy-print-report h1{font-size:19px;color:#111!important}.fmy-print-report p{font-size:10px;line-height:1.45;color:#333}.fmy-print-report .print-summary{display:flex;flex-wrap:wrap;gap:8px;margin:15px 0}.fmy-print-report .print-summary b{padding:6px;border:1px solid #888}.fmy-print-report table{width:100%;font-size:9px;border-collapse:collapse}.fmy-print-report th,.fmy-print-report td{white-space:normal;color:#111!important;border:1px solid #888;padding:5px;overflow-wrap:anywhere} @page{size:A4 landscape;margin:12mm}}
-</style></head><body><header><div class="bar"><div><h1>FMY<b>01</b> <span style="font-size:12px;color:#a4bad2">/ TERMINAL V4.4 · HISTORICAL VALIDATION</span></h1><small>MARKET DATA · RULE-BASED SIGNAL · PAPER ONLY</small></div><div class="flex"><div class="field"><label>Market &amp; Pair</label><select id="market"><option value="spot:XBTUSD">SPOT · BTC/USD (XBTUSD)</option><option value="spot:ETHUSD">SPOT · ETH/USD</option><option value="spot:SOLUSD">SPOT · SOL/USD</option><option selected="" value="futures:PF_XBTUSD">FUTURES · BTC/USD Perpetual Linear (PF_XBTUSD)</option></select></div><div class="field"><label>Timeframe</label><select id="tf"><option value="15">15m</option><option selected="" value="60">1H</option><option value="240">4H</option></select></div><button class="primary" id="fetch">↻ Muat data</button><span class="chip" id="health">BELUM TERHUBUNG</span></div></div></header>
+@media print {body:has(#v5Print) > *:not(#v5Print){display:none!important}#v5Print{display:block!important;background:white;color:black;padding:12px}#v5Print table{width:100%;border-collapse:collapse}#v5Print td,#v5Print th{border:1px solid #bbb;padding:5px;color:black}#v5Print p{color:black}}
+</style></head><body><header><div class="bar"><div><h1>FMY<b>01</b> <span style="font-size:12px;color:#a4bad2">/ TERMINAL V5.0 RC1 · 15M PAPER VALIDATION</span></h1><small>MARKET DATA · RULE-BASED SIGNAL · PAPER ONLY</small></div><div class="flex"><div class="field"><label>Market &amp; Pair</label><select id="market"><option value="spot:XBTUSD">SPOT · BTC/USD (XBTUSD)</option><option value="spot:ETHUSD">SPOT · ETH/USD</option><option value="spot:SOLUSD">SPOT · SOL/USD</option><option selected="" value="futures:PF_XBTUSD">FUTURES · BTC/USD Perpetual Linear (PF_XBTUSD)</option></select></div><div class="field"><label>Timeframe</label><select id="tf"><option value="15">15m</option><option selected="" value="60">1H</option><option value="240">4H</option></select></div><button class="primary" id="fetch">↻ Muat data</button><span class="chip" id="health">BELUM TERHUBUNG</span></div></div></header>
 <main><div class="notice">⚠️ SIMULASI — tanpa API key dan tanpa order nyata. Harga spot, futures dan USDT bukan hal yang sama. Sinyal dari candle selesai; ticker untuk harga terkini. Paper monitoring hanya berjalan selama halaman aktif, tanpa jaminan eksekusi TP/SL di pasar nyata.</div><div class="between"><div><div class="status" id="status">Menyiapkan sumber pasar…</div><div class="status" id="alert"></div></div><div class="actions"><button id="csvbtn">Impor CSV</button><input accept=".csv,text/csv" hidden="" id="csv" type="file"/><button id="export">Ekspor jurnal</button></div></div>
 <div class="metrics"><div class="metric"><small>LIVE LAST / TICKER</small><strong id="tickerPrice">—</strong><small id="tickerTime">Belum ada ticker</small></div><div class="metric"><small>CLOSED CANDLE</small><strong id="closePrice">—</strong><small id="candleTime">Belum ada candle</small></div><div class="metric"><small>TREND EMA20 / EMA50</small><strong id="trend">—</strong><small id="emas">—</small></div><div class="metric"><small>RSI14 · ATR14</small><strong id="rsiatr">—</strong><small id="source">—</small></div></div>
 <div class="columns"><div class="panel"><div class="between"><h2>MARKET CHART</h2><span class="tag" id="series">—</span></div><div class="chart"><canvas id="chart" style="width:100%;height:100%"></canvas></div><p class="note">Grafik menampilkan candle yang sudah ditutup. Ticker di atas berasal dari permintaan data terpisah. Timestamp candle menunjukkan awal interval, dalam WIB.</p></div><div class="panel"><div class="between"><h2>DECISION ENGINE</h2><span class="tag">RULE BASED</span></div><small>Layer A (tren) + B (struktur) + C (ADX/volume) + Risk Gate</small><div class="signal yellow" id="signal">WAIT</div><div class="mini" style="margin:7px 0"><small>Confidence Score (bukan peluang menang)</small><strong id="mainConfidence">—</strong></div><p class="note" id="reason">Menunggu data.</p><div class="info"><div><label>Entry referensi</label><strong id="entry">—</strong></div><div><label>Stop loss</label><strong id="sl">—</strong></div><div><label>Take profit</label><strong id="tp">—</strong></div><div><label>Risk : Reward</label><strong>1 : 2</strong></div></div><p class="note">Bukan prediksi kepastian. WAIT dapat menjadi pilihan terbaik. Skor bukan probabilitas menang. Konfirmasi 4H hanya dari candle yang sudah ditutup.</p></div></div><section class="panel v4panel" id="v4panel"><div class="between"><h2>FMY01 V5 · SMART QUANT ENGINE · KANDIDAT UJI</h2><span class="tag">RULE BASED · PAPER ONLY</span></div><p class="note">Konfirmasi tren menggunakan candle 4H yang sudah selesai. Skor adalah aturan heuristik, <b>bukan</b> probabilitas menang. Jika data 4H tidak tersedia, sinyal otomatis WAIT.</p><div class="v4grid"><div class="mini"><small>Konfirmasi 4H</small><strong id="v4trend">Menunggu data</strong></div><div class="mini"><small>Confidence Score (kesesuaian aturan)</small><strong id="v4score">—</strong></div><div class="mini"><small>Keputusan terfilter</small><strong id="v4decision">WAIT</strong></div><div class="mini"><small>Status 4H</small><strong id="v4fresh">—</strong></div></div><hr style="border:0;border-top:1px solid var(--stroke);margin:18px 0"/><h2>RISK CALCULATOR · SIMULASI</h2><div class="v4row"><div><label>Modal simulasi (USD)</label><input id="v4capital" min="10" step="50" type="number" value="1000"/></div><div><label>Risiko (%) / posisi</label><input id="v4risk" max="3" min="0.1" step="0.1" type="number" value="0.5"/></div><div><label>Max nominal posisi / modal (×)</label><input id="v4max" max="1" min="0.1" step="0.1" type="number" value="1"/></div></div><div class="v4grid"><div class="mini"><small>Entry estimasi (bid/ask)</small><strong id="v4entry">—</strong></div><div class="mini"><small>SL / TP</small><strong id="v4stops">—</strong></div><div class="mini"><small>Jumlah BTC (simulasi spot-equivalent)</small><strong id="v4qty">—</strong></div><div class="mini"><small>Perkiraan rugi di SL termasuk biaya</small><strong id="v4loss">—</strong></div></div><p class="v4warning" id="v4explain">Menunggu data. Tanpa asumsi leverage, margin, likuidasi, dan funding; jangan gunakan nominal ini sebagai ukuran kontrak futures nyata.</p></section>
@@ -25,22 +28,47 @@
   <p class="note" id="histCalibration">Kalibrasi skor C: menunggu hasil transaksi out-of-sample.</p>
   <button id="histPdf" type="button" disabled>⬇ Ekspor laporan validasi PDF</button>
 </div>
-</div><div class="panel"><div class="between"><h2>PAPER TRADING</h2><span class="tag">LOCAL DEVICE</span></div><p class="note">Posisi disimpan di perangkat ini. Perhitungan P&amp;L menggunakan ticker yang tersedia; refresh tiap 30 detik hanya ketika tab aktif. TP/SL adalah simulasi berdasarkan snapshot ticker, sehingga pergerakan harga antar-poll dapat terlewat. Jangan dipakai sebagai proteksi posisi sungguhan.</p><div class="twocol"><div><label>Modal simulasi (USD)</label><input id="capital" min="1" type="number" value="1000"/></div><div><label>Risiko / transaksi (%)</label><input id="paperRisk" max="5" min="0.1" step="0.1" type="number" value="0.5"/></div></div><div class="actions" style="margin:13px 0"><button id="long">+ Paper LONG</button><button id="short">− Paper SHORT</button><button class="primary" id="paperRefresh">↻ Update harga</button><button id="close">Tutup manual</button><button class="danger" id="reset">Reset paper</button></div><div class="info"><div><label>Equity simulasi</label><strong id="equity">—</strong></div><div><label>Open position</label><strong id="position">—</strong></div><div><label>Realized P&amp;L</label><strong id="realized">—</strong></div><div><label>Floating P&amp;L</label><strong id="floating">—</strong></div></div><p class="status" id="paperStatus">Belum ada aksi.</p></div></div>
+</div><div class="panel"><div class="between"><h2>PAPER TRADING LEGACY V4.4 · ARSIP</h2><span class="tag">LOCAL DEVICE</span></div><p class="note">Posisi disimpan di perangkat ini. Perhitungan P&amp;L menggunakan ticker yang tersedia; refresh tiap 30 detik hanya ketika tab aktif. TP/SL adalah simulasi berdasarkan snapshot ticker, sehingga pergerakan harga antar-poll dapat terlewat. Jangan dipakai sebagai proteksi posisi sungguhan.</p><div class="twocol"><div><label>Modal simulasi (USD)</label><input id="capital" min="1" type="number" value="1000"/></div><div><label>Risiko / transaksi (%)</label><input id="paperRisk" max="5" min="0.1" step="0.1" type="number" value="0.5"/></div></div><div class="actions" style="margin:13px 0"><button id="long" disabled title="Gunakan panel pending order V5">+ Paper LONG (nonaktif)</button><button id="short" disabled title="Gunakan panel pending order V5">− Paper SHORT (nonaktif)</button><button class="primary" id="paperRefresh">↻ Update harga</button><button id="close">Tutup manual</button><button class="danger" id="reset">Reset paper</button></div><div class="info"><div><label>Equity simulasi</label><strong id="equity">—</strong></div><div><label>Open position</label><strong id="position">—</strong></div><div><label>Realized P&amp;L</label><strong id="realized">—</strong></div><div><label>Floating P&amp;L</label><strong id="floating">—</strong></div></div><p class="status" id="paperStatus">Belum ada aksi.</p></div></div>
 <section class="panel" id="watchalerts" style="margin-top:18px">
-  <h2>⌚ Smart Alert Bridge <small style="opacity:.65">V4.1 · PAPER ONLY</small></h2>
+  <h2>⌚ Smart Alert Bridge Legacy <small style="opacity:.65">Nonaktif untuk V5 RC1</small></h2>
   <p>Siapkan pemantauan SL/TP dari posisi paper yang sedang terbuka. Tidak ada token Telegram atau kunci Cloudflare tersimpan di dashboard publik.</p>
   <div class="grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin:12px 0">
     <div class="box" style="padding:12px"><small>Posisi paper</small><p id="bridgeposition">Belum ada posisi terbuka</p></div>
     <div class="box" style="padding:12px"><small>Level referensi</small><p id="bridgelevels">SL — · TP —</p></div>
   </div>
-  <button id="bridgeOpen" type="button">↗ Siapkan Alert dari Posisi Paper</button>
+  <button id="bridgeOpen" type="button" disabled title="Belum terhubung ke pending order V5">↗ Siapkan Alert dari Posisi Paper</button>
   <button id="bridgeManager" type="button">↗ Buka Alert Manager</button>
   <p id="bridgeNote" style="font-size:13px;opacity:.83">Kamu tetap harus mengisi kunci dan klik Aktifkan di Alert Manager. Alert ini tidak menutup order exchange.</p>
 </section>
-<section class="panel"><div class="between"><h2>JURNAL TRANSAKSI</h2><small>Storage lokal · tidak sinkron</small></div><div class="v4grid" id="journalSummary" style="margin:12px 0"><div class="mini"><small>Trade ditutup</small><strong id="jClosed">0</strong></div><div class="mini"><small>Win rate REALIZED</small><strong id="jWin">—</strong></div><div class="mini"><small>Net P&amp;L closed</small><strong id="jNet">—</strong></div><div class="mini"><small>Posisi aktif</small><strong id="jOpen">0</strong></div></div>
+
+<section class="panel" id="v5module" style="margin:14px 0;border-color:#397b91">
+ <div class="between"><h2>V5 RC1 · ENTRY PLAN 4H → 1H → 15M</h2><span class="tag">PAPER ONLY · LOKAL</span></div>
+ <p class="note">Harga rencana entry berasal dari analisis dan trigger candle <b>15 menit yang sudah ditutup</b>. Paper LIMIT harus PENDING dulu; posisi OPEN hanya saat harga simulasi memenuhi kondisi fill. Status di sini disimpan di browser ini saja; <b>ketika tab tertutup pemantauan berhenti dan pergerakan intrabar mungkin terlewat</b>. Belum terhubung otomatis dengan Telegram/Worker.</p>
+ <div class="v4grid">
+  <div class="mini"><small>Keputusan akhir 4H/1H/15M</small><strong id="v5Decision">WAIT</strong></div>
+  <div class="mini"><small>Confidence (skor aturan)</small><strong id="v5Score">—</strong></div>
+  <div class="mini"><small>Market Regime (indikatif)</small><strong id="v5Regime">—</strong></div>
+  <div class="mini"><small>Trigger 15M</small><strong id="v5Trigger">—</strong></div>
+ </div>
+ <p id="v5Why" class="status">Ambil candle 15M untuk menghitung entry.</p>
+ <div class="v4grid">
+  <div class="mini"><small>Entry LIMIT analisis</small><strong id="v5Entry">—</strong></div>
+  <div class="mini"><small>Stop Loss simulasi</small><strong id="v5SL">—</strong></div>
+  <div class="mini"><small>Take Profit simulasi</small><strong id="v5TP">—</strong></div>
+  <div class="mini"><small>R:R sebelum biaya</small><strong id="v5RR">—</strong></div>
+ </div>
+ <div class="actions" style="margin-top:12px"><button id="v5Check" class="primary">↻ Analisis Entry 15M</button><button id="v5Place">+ Buat Paper Order dari Analisis</button><button id="v5Cancel">Batalkan Pending</button><button id="v5Close">Tutup Paper OPEN</button></div>
+ <p id="v5OrderStatus" class="status">Belum ada paper order V5.</p>
+ <div class="v4grid" style="margin-top:10px"><div class="mini"><small>Status order</small><strong id="v5Status">NONE</strong></div><div class="mini"><small>Harga fill simulasi</small><strong id="v5Fill">—</strong></div><div class="mini"><small>Uang paper V5 (USD)</small><strong id="v5Cash">$1,000.00</strong></div><div class="mini"><small>Closed / win rate</small><strong id="v5Win">0 / —</strong></div></div>
+ <div class="actions" style="margin:13px 0"><button id="v5Csv">⬇ Ekspor jurnal V5 CSV</button><button id="v5Pdf" class="primary">⬇ Ekspor jurnal V5 PDF</button><button id="v5Test">🧪 Tes alur pending/fill</button></div>
+ <p id="v5TestStatus" class="status">Uji simulasi tidak mengubah order yang tersimpan.</p>
+ <div class="scroll"><table><thead><tr><th>Waktu</th><th>Side</th><th>Entry rencana</th><th>Fill</th><th>Exit</th><th>P&amp;L</th><th>Status</th></tr></thead><tbody id="v5Journal"><tr><td colspan="7">Belum ada order V5</td></tr></tbody></table></div>
+ <p class="note">Jurnal V4.4 tetap tersedia di bagian bawah sebagai arsip terpisah. Win rate V5 dihitung hanya dari CLOSED, bukan PENDING/EXPIRED. Sistem ini belum menghitung likuidasi, margin atau funding dan bukan perlindungan order nyata.</p>
+</section>
+<section class="panel"><div class="between"><h2>JURNAL LEGACY V4.4</h2><small>Storage lokal · tidak sinkron</small></div><div class="v4grid" id="journalSummary" style="margin:12px 0"><div class="mini"><small>Trade ditutup</small><strong id="jClosed">0</strong></div><div class="mini"><small>Win rate REALIZED</small><strong id="jWin">—</strong></div><div class="mini"><small>Net P&amp;L closed</small><strong id="jNet">—</strong></div><div class="mini"><small>Posisi aktif</small><strong id="jOpen">0</strong></div></div>
 <p class="note">Win rate = jumlah transaksi ditutup dengan P&amp;L positif / seluruh transaksi ditutup. Posisi OPEN tidak dihitung. Hasil dari browser/perangkat ini saja; bukan backtest dan bukan bukti profitabilitas.</p>
 <div class="actions" style="margin:10px 0"><button class="primary" id="exportPdf" type="button">⬇ Ekspor laporan PDF</button><button id="selfTest" type="button">✓ Uji hitungan jurnal</button><button id="engineTest" type="button">🧪 Uji mesin A/B/C</button></div><p id="journalTestStatus" class="status">Uji perhitungan tersedia tanpa membuka transaksi.</p>
-<div class="scroll"><table><thead><tr><th>Waktu (WIB)</th><th>Market</th><th>Side</th><th>Entry</th><th>Exit</th><th>P&amp;L</th><th>Status</th></tr></thead><tbody id="journal"><tr><td colspan="7">Belum ada transaksi</td></tr></tbody></table></div></section><div class="foot">FMY01 V4.4 · Kandidat validasi V5.0 · Kraken Spot / Kraken Futures Public API. Futures tidak identik dengan spot; CSV harus berasal dari market yang sesuai. Aplikasi tidak menjalankan tugas ketika halaman ditutup. Untuk pemantauan 24/7 diperlukan backend terpisah. Confidence Score adalah heuristik, bukan AI atau probabilitas kemenangan. Konfirmasi 4H yang digunakan adalah candle 4H yang sudah tutup. </div></main>
+<div class="scroll"><table><thead><tr><th>Waktu (WIB)</th><th>Market</th><th>Side</th><th>Entry</th><th>Exit</th><th>P&amp;L</th><th>Status</th></tr></thead><tbody id="journal"><tr><td colspan="7">Belum ada transaksi</td></tr></tbody></table></div></section><div class="foot">FMY01 V5.0 RC1 · Kandidat uji pending order, bukan rilis final · Kraken Spot / Kraken Futures Public API. Futures tidak identik dengan spot; CSV harus berasal dari market yang sesuai. Aplikasi tidak menjalankan tugas ketika halaman ditutup. Untuk pemantauan 24/7 diperlukan backend terpisah. Confidence Score adalah heuristik, bukan AI atau probabilitas kemenangan. Konfirmasi 4H yang digunakan adalah candle 4H yang sudah tutup. </div></main>
 <script>
 'use strict';
 const $=id=>document.getElementById(id), money=n=>Number.isFinite(n)?'$'+n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}):'—',percentage=n=>Number.isFinite(n)?n.toFixed(2)+'%':'—';
@@ -297,7 +325,7 @@ function updateAlertBridge(){
   $('bridgeposition').textContent=p?`${p.side} · ${p.market} · ${money(p.entry)}`:'Tidak ada posisi paper terbuka';
   $('bridgelevels').textContent=p?`SL ${money(p.sl)} · TP ${money(p.tp)}`:'SL — · TP —';
   $('bridgeOpen').disabled=!p || p.market!=='futures:PF_XBTUSD';
-  $('bridgeNote').textContent=!p?'Buka Paper LONG / SHORT terlebih dahulu untuk menyiapkan level.':p.market!=='futures:PF_XBTUSD'?'Worker saat ini hanya mendukung PF_XBTUSD. Posisi market lain tidak dapat dikirim.':'Klik Siapkan Alert, lalu masukkan kunci rahasia hanya di Alert Manager dan tekan Aktifkan.';
+  $('bridgeNote').textContent=!p?'Buka Paper LONG / SHORT terlebih dahulu untuk menyiapkan level.':p.market!=='futures:PF_XBTUSD'?'Worker saat ini hanya mendukung PF_XBTUSD. Posisi market lain tidak dapat dikirim.':'Bridge lama khusus posisi paper V4.4; belum sinkron dengan order V5. Jangan aktifkan monitoring V5 melalui tombol ini.';
 }
 $('bridgeManager').onclick=()=>window.open(ALERT_MANAGER_URL,'_blank','noopener,noreferrer');
 $('bridgeOpen').onclick=()=>{
@@ -385,7 +413,138 @@ function fmyHistoryReportPdf(){
 $('histRun').onclick=fmyRunHistory;
 $('histPdf').onclick=fmyHistoryReportPdf;
 
-</script></body></html>
+</script>
+<script>
+// FMY01 V5 RC1 local paper validation module. No keys, no live orders.
+'use strict';
+(() => {
+ const el=id=>document.getElementById(id), msg=(id,v)=>{el(id).textContent=String(v)};
+ const storeKey='fmy01-v5-rc1-local';
+ const load=()=>{try{const v=JSON.parse(localStorage.getItem(storeKey));if(v&&Array.isArray(v.history)&&Number.isFinite(v.cash)&&v.cash>=0)return v}catch{}return {cash:1000,order:null,history:[]}};
+ let ledger=load(),proposal=null,fetchBusy=false,lastEvaluation=0,sourceStamp=0,lastMarketKey='';
+ const save5=()=>localStorage.setItem(storeKey,JSON.stringify(ledger));
+ const fmt=n=>Number.isFinite(n)?'$'+n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}):'—';
+ const time=t=>new Date(t).toLocaleString('id-ID',{timeZone:'Asia/Jakarta'});
+ const quoteOK=()=>typeof activeQuote==='function'&&activeQuote()&&config().key==='futures:PF_XBTUSD';
+ const avg=(a)=>a.reduce((x,y)=>x+y,0)/a.length;
+ const pivots=(arr,dir)=>{let a=[];for(let j=2;j<arr.length-2;j++){let p=arr[j],l=dir==='HIGH'?p.h:p.l;if([arr[j-2],arr[j-1],arr[j+1],arr[j+2]].every(x=>dir==='HIGH'?l>x.h:l<x.l))a.push(l)}return a};
+ const nearest=(values,price,side)=>values.filter(x=>Number.isFinite(x)&&(side==='ABOVE'?x>price:x<price)).sort((a,b)=>Math.abs(a-price)-Math.abs(b-price))[0];
+ function makeDecision(h15,h1,h4){
+  const w=(why,score=0,candidate='WAIT',regime='—')=>({side:'WAIT',why,score,candidate,regime});
+  if(h15.length<60||h1.length<85||h4.length<60)return w('Data candle tertutup tidak cukup');
+  const last15=h15.at(-1),cut=last15.t+900000;
+  if(Date.now()-cut>40*60000)return w('Candle 15M sudah basi; refresh data');
+  const a1=h1.filter(b=>b.t+3600000<=cut),a4=h4.filter(b=>b.t+14400000<=cut);
+  if(a1.length<85||a4.length<60)return w('Konfirmasi 1H/4H tertutup tidak tersedia');
+  if(cut-(a1.at(-1).t+3600000)>70*60000||cut-(a4.at(-1).t+14400000)>270*60000)return w('Data 1H/4H tidak segar');
+  const one=fmyIndicators(a1),k=a1.length-1,v=one.atr[k],adx=one.adx[k];
+  if(!Number.isFinite(v)||v<=0||!Number.isFinite(adx))return w('ATR/ADX tidak valid');
+  let regime=adx<18?'SIDEWAYS':adx<24?'TRANSISI':'TRENDING';
+  if(v/a1.at(-1).c>.045)regime='VOLATILITAS TINGGI';
+  const base=fmyEvaluate(a1,a4,k,'B',{one,four:fmyIndicators(a4)});
+  if(base.side==='WAIT')return w('Setup 1H belum lolos: '+base.why,Math.max(0,base.score||0),base.candidate||'WAIT',regime);
+  const side=base.side,sg=side==='LONG'?1:-1;
+  const fifteen=fmyIndicators(h15),i=h15.length-1,x=h15[i],prev=h15[i-1],e=fifteen.e20[i],r=fifteen.rsi[i],atr15=fifteen.atr[i];
+  if(![e,r,atr15].every(Number.isFinite)||atr15<=0)return w('Indikator 15M tidak siap',base.score,side,regime);
+  const candleConfirmed=(side==='LONG'?x.c>x.o&&x.c>e&&x.c>prev.c:x.c<x.o&&x.c<e&&x.c<prev.c);
+  const score=Math.min(100,Math.round((base.score||0)*.75+(candleConfirmed?15:0)+(r>=40&&r<=65?10:4)));
+  if(regime==='VOLATILITAS TINGGI'||regime==='SIDEWAYS')return w('Regime '+regime+': entry tren ditahan',score,side,regime);
+  if(!candleConfirmed)return w('Menunggu konfirmasi arah candle 15M',score,side,regime);
+  if(score<70)return w('Confidence belum mencapai ambang uji 70',score,side,regime);
+  // Pullback-limit order on the favorable side of 15m close, not live market execution.
+  const entry=x.c-sg*atr15*.25,dist=Math.max(v*1.4,atr15*2),sl=entry-sg*dist,tp=entry+sg*dist*2;
+  const look1=a1.slice(-72),look4=a4.slice(-44),levels=[...pivots(look1,'HIGH'),...pivots(look1,'LOW'),...pivots(look4,'HIGH'),...pivots(look4,'LOW')];
+  const obstacle=nearest(levels,entry,side==='LONG'?'ABOVE':'BELOW');
+  if(Number.isFinite(obstacle)&&sg*(obstacle-entry)>0&&sg*(obstacle-entry)<dist*1.5)return w('TP berpotensi terhalang pivot S/R sebelum 1.5R',score,side,regime);
+  if(side==='LONG'&&!(sl<entry&&entry<tp)||side==='SHORT'&&!(tp<entry&&entry<sl))return w('Level order tidak valid',score,side,regime);
+  const id=side+':'+last15.t+':'+entry.toFixed(2);
+  return {side,candidate:side,score,regime,entry,sl,tp,rr:2,at:cut,id,why:'Setup 1H + konfirmasi 4H + trigger 15M; LIMIT pullback; pemeriksaan pivot S/R sederhana.'};
+ }
+ function display(){
+  const o=ledger.order;
+  msg('v5Status',o?o.status:'NONE');msg('v5Cash',fmt(ledger.cash));msg('v5Fill',o?.fill?fmt(o.fill):'—');
+  const closed=ledger.history.filter(x=>x.status.startsWith('CLOSED')),w=closed.filter(x=>x.pnl>0).length;
+  msg('v5Win',closed.length+' / '+(closed.length?(100*w/closed.length).toFixed(1)+'%':'—'));
+  const rows=[...ledger.history];if(o)rows.push(o);const t=el('v5Journal');t.replaceChildren();
+  for(const x of rows.reverse().slice(0,100)){const tr=document.createElement('tr');for(const value of [time(x.created),x.side,fmt(x.entry),fmt(x.fill),fmt(x.exit),fmt(x.pnl),x.status]){const td=document.createElement('td');td.textContent=value;tr.append(td)}t.append(tr)}
+  if(!rows.length){t.innerHTML='<tr><td colspan="7">Belum ada order V5</td></tr>'}
+  msg('v5OrderStatus',o?`${o.side} ${o.status} · LIMIT ${fmt(o.entry)} · SL ${fmt(o.sl)} · TP ${fmt(o.tp)} · berakhir ${time(o.expires)} WIB`:'Tidak ada pending/open V5. Monitoring hanya ketika tab aktif.');
+ }
+ function settle(o,px,reason,at){
+  const execution=reason==='SL'? (o.side==='LONG'?Math.min(px,o.sl):Math.max(px,o.sl)) :reason==='TP'?(o.side==='LONG'?Math.min(px,o.tp):Math.max(px,o.tp)):px;
+  const feeRate=Math.max(0,Number(el('fee').value)||0)/100,slipRate=Math.max(0,Number(el('slip').value)||0)/100;
+  const gross=(o.side==='LONG'?execution-o.fill:o.fill-execution)*o.qty;
+  const cost=(o.fill+execution)*o.qty*(feeRate+slipRate);
+  const pnl=gross-cost;
+  const done={...o,status:'CLOSED '+reason,exit:execution,pnl,closedAt:at};ledger.cash=Math.max(0,ledger.cash+pnl);ledger.history.push(done);ledger.order=null;save5();display();
+ }
+ function reconcile(){
+  const o=ledger.order;if(!o)return;
+  if(o.status==='PENDING'&&Date.now()>=o.expires){ledger.history.push({...o,status:'EXPIRED',closedAt:Date.now()});ledger.order=null;save5();display();return}
+  if(!quoteOK()||!tickerAt||tickerAt<=o.lastSeen )return;
+  const ask=Number(ticker.ask),bid=Number(ticker.bid);if(!Number.isFinite(ask)||!Number.isFinite(bid)||ask<=0||bid<=0)return;
+  o.lastSeen=tickerAt;
+  if(o.status==='PENDING'){
+   const fillable=o.side==='LONG'?ask<=o.entry:bid>=o.entry;
+   if(fillable){o.status='OPEN';o.fill=o.entry;o.filledAt=tickerAt; /* conservative fill at LIMIT, not an improved price */}
+  }else if(o.status==='OPEN'){
+   const px=o.side==='LONG'?bid:ask,stop=o.side==='LONG'?px<=o.sl:px>=o.sl,take=o.side==='LONG'?px>=o.tp:px<=o.tp;
+   if(stop||take){settle(o,px,stop?'SL':'TP',tickerAt);return}
+  }
+  save5();display();
+ }
+ async function evaluate(){
+  if(fetchBusy)return;fetchBusy=true;el('v5Check').disabled=true;
+  try{
+   if(config().key!=='futures:PF_XBTUSD'||config().tf!==60||datasetKey!==config().key||!confirmOK)throw Error('Pilih Futures PF_XBTUSD dan timeframe 1H; muat data terlebih dahulu');
+   const resp=await fetch(FUTURES_WORKER+'/candles?interval=15m',{cache:'no-store'});if(!resp.ok)throw Error('Candle 15M HTTP '+resp.status);
+   const j=await resp.json(),raw=j.candles||[];
+   const q=normalize(raw.map(x=>({t:Number(x.time)<1e12?Number(x.time)*1000:Number(x.time),o:Number(x.open),h:Number(x.high),l:Number(x.low),c:Number(x.close),v:Number(x.volume)})));
+   const fifteen=q.filter(x=>x.t+900000<=Date.now()-10000);
+   if(fifteen.length<60)throw Error('Candle 15M kurang dari 60');
+   proposal=makeDecision(fifteen,bars,confirm4h);sourceStamp=Date.now();lastMarketKey=config().key;
+   msg('v5Decision',proposal.side);msg('v5Score',proposal.score+'% · bukan peluang menang');msg('v5Regime',proposal.regime);msg('v5Trigger',time(fifteen.at(-1).t+900000)+' WIB');
+   msg('v5Why',proposal.why);msg('v5Entry',fmt(proposal.entry));msg('v5SL',fmt(proposal.sl));msg('v5TP',fmt(proposal.tp));msg('v5RR',proposal.rr?'1 : '+proposal.rr:'—');
+   lastEvaluation=Date.now();
+  }catch(err){proposal=null;msg('v5Decision','WAIT');msg('v5Why','Tidak siap: '+err.message);msg('v5Entry','—');msg('v5SL','—');msg('v5TP','—');}
+  finally{fetchBusy=false;el('v5Check').disabled=false}
+ }
+ function place(){
+  if(ledger.order)return alert('Sudah ada order V5 PENDING/OPEN');
+  if(typeof paper!=='undefined'&&paper.open)return alert('Masih ada posisi legacy V4.4 OPEN. Tutup posisi simulasi lama dahulu sebelum menguji V5.');
+  if(!proposal||!['LONG','SHORT'].includes(proposal.side)||!Number.isFinite(proposal.entry))return alert('Belum ada setup 15M yang layak: WAIT');
+  if(Date.now()-lastEvaluation>120000||!quoteOK())return alert('Data analisis / ticker tidak segar. Analisis ulang.');
+  if(ledger.history.some(x=>x.id===proposal.id))return alert('Setup candle ini sudah pernah dibuat menjadi order');
+  const risk=Math.min(.005,Math.max(.001,(Number(el('paperRisk').value)||.5)/100));
+  const qty=Math.min(ledger.cash*risk/(Math.abs(proposal.entry-proposal.sl)+2*proposal.entry*.0009),ledger.cash/proposal.entry);
+  if(!(qty>0))return alert('Saldo atau ukuran posisi tidak valid');
+  if(!confirm('Buat simulasi '+proposal.side+' LIMIT '+fmt(proposal.entry)+'? Order akan PENDING, tidak langsung OPEN.'))return;
+  const now=Date.now();ledger.order={id:proposal.id,market:'futures:PF_XBTUSD',side:proposal.side,status:'PENDING',entry:proposal.entry,sl:proposal.sl,tp:proposal.tp,qty,score:proposal.score,created:now,expires:now+2*3600000,lastSeen:tickerAt||0,fill:null,exit:null,pnl:null};save5();display();
+ }
+ function cancel(){const o=ledger.order;if(!o||o.status!=='PENDING')return alert('Tidak ada order PENDING');if(!confirm('Batalkan pending order V5?'))return;ledger.history.push({...o,status:'CANCELLED',closedAt:Date.now()});ledger.order=null;save5();display()}
+ function close(){const o=ledger.order;if(!o||o.status!=='OPEN')return alert('Tidak ada posisi V5 OPEN');if(!quoteOK())return alert('Ticker tidak segar');if(!confirm('Tutup paper OPEN secara manual?'))return;settle(o,o.side==='LONG'?ticker.bid:ticker.ask,'MANUAL',Date.now())}
+ function exportRows(){return ledger.history.map(x=>[new Date(x.created).toISOString(),x.id,x.market,x.side,x.status,x.entry,x.fill??'',x.sl,x.tp,x.exit??'',x.qty,x.pnl??'',x.score,x.closedAt?new Date(x.closedAt).toISOString():''])}
+ const headers=['created','id','market','side','status','planned_entry','actual_fill','sl','tp','exit','qty','pnl_after_cost','confidence','closed_at'];
+ function csv(){const lines=[headers,...exportRows()].map(a=>a.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(','));const u=URL.createObjectURL(new Blob([lines.join('\n')],{type:'text/csv'}));const a=document.createElement('a');a.href=u;a.download='FMY01_V5_RC1_PAPER_JOURNAL.csv';a.click();setTimeout(()=>URL.revokeObjectURL(u),3000)}
+ function pdf(){
+  const rows=ledger.history.filter(x=>x.status.startsWith('CLOSED'));const wins=rows.filter(x=>x.pnl>0).length,net=rows.reduce((n,x)=>n+x.pnl,0);
+  const escape=s=>String(s??'').replace(/[&<>"']/g,x=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[x]));
+  document.getElementById('v5Print')?.remove();const wrap=document.createElement('section');wrap.id='v5Print';wrap.className='fmy-print-report';
+  wrap.innerHTML='<h1>FMY01 V5 RC1 — Jurnal Paper Order</h1><p>Dicetak '+escape(time(Date.now()))+' WIB · Lokal/browser · BUKAN transaksi bursa</p><p>Closed '+rows.length+' · Win '+wins+' · Win rate '+(rows.length?(100*wins/rows.length).toFixed(2)+'%':'—')+' · Net P&L '+escape(fmt(net))+' · Pending/Open '+(ledger.order?ledger.order.status:'NONE')+'</p><table><thead><tr><th>Waktu</th><th>Side</th><th>Entry rencana</th><th>Fill</th><th>Exit</th><th>P&amp;L</th><th>Status</th></tr></thead><tbody>'+ledger.history.map(x=>'<tr>'+[time(x.created),x.side,fmt(x.entry),fmt(x.fill),fmt(x.exit),fmt(x.pnl),x.status].map(v=>'<td>'+escape(v)+'</td>').join('')+'</tr>').join('')+'</tbody></table><p>Entry LIMIT disimulasikan dari snapshot ticker sewaktu tab aktif. Tick hilang, slippage saat gap, funding, likuidasi dan perilaku matching engine bursa tidak dimodelkan. Confidence adalah skor aturan, bukan win probability. Hasil tidak dapat dipakai sebagai klaim profit.</p>';
+  document.body.append(wrap);window.print();
+ }
+ function test(){
+  const sample={side:'SHORT',entry:100,sl:104,tp:92,status:'PENDING',created:1000,expires:100000,lastSeen:0}, price=101;
+  const checks=[['SL SHORT di atas entry',sample.sl>sample.entry],['TP SHORT di bawah entry',sample.tp<sample.entry],['SHORT tidak fill di bid 99',!(99>=sample.entry)],['SHORT fill di bid 101',price>=sample.entry],['Loss tidak termasuk pending',!sample.pnl],['WAIT tidak dapat membuat rencana tanpa level',!Number.isFinite(undefined)]];
+  msg('v5TestStatus',(checks.every(v=>v[1])?'LULUS':'GAGAL')+' · '+checks.map(v=>v[0]+' '+(v[1]?'OK':'ERROR')).join(' · '));
+ }
+ el('v5Check').onclick=evaluate;el('v5Place').onclick=place;el('v5Cancel').onclick=cancel;el('v5Close').onclick=close;el('v5Csv').onclick=csv;el('v5Pdf').onclick=pdf;el('v5Test').onclick=test;
+ setInterval(()=>{if(!document.hidden)reconcile()},3000);
+ window.addEventListener('storage',e=>{if(e.key===storeKey){ledger=load();display()}});
+ display();
+})();
+</script>
+</body></html>
 
 
 
