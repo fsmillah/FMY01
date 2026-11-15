@@ -1,3 +1,7 @@
+
+
+
+
 <!DOCTYPE html>
 
 <html lang="id"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/><meta content="#08111e" name="theme-color"/><title>FMY01 V4 | Futures Trading Intelligence</title><style>
@@ -7,7 +11,7 @@
 
 .fmy-print-report{display:none}@media print{body{background:white!important;color:#111!important;font:10px Arial,sans-serif!important}body>*:not(.fmy-print-report){display:none!important}.fmy-print-report{display:block!important;padding:10mm}.fmy-print-report h1{font-size:19px;color:#111!important}.fmy-print-report p{font-size:10px;line-height:1.45;color:#333}.fmy-print-report .print-summary{display:flex;flex-wrap:wrap;gap:8px;margin:15px 0}.fmy-print-report .print-summary b{padding:6px;border:1px solid #888}.fmy-print-report table{width:100%;font-size:9px;border-collapse:collapse}.fmy-print-report th,.fmy-print-report td{white-space:normal;color:#111!important;border:1px solid #888;padding:5px;overflow-wrap:anywhere} @page{size:A4 landscape;margin:12mm}}
 @media print {body:has(#v5Print) > *:not(#v5Print){display:none!important}#v5Print{display:block!important;background:white;color:black;padding:12px}#v5Print table{width:100%;border-collapse:collapse}#v5Print td,#v5Print th{border:1px solid #bbb;padding:5px;color:black}#v5Print p{color:black}}
-</style></head><body><header><div class="bar"><div><h1>FMY<b>01</b> <span style="font-size:12px;color:#a4bad2">/ TERMINAL V5.0 RC2 · AUTO SCAN VALIDATION</span></h1><small>MARKET DATA · RULE-BASED SIGNAL · PAPER ONLY</small></div><div class="flex"><div class="field"><label>Market &amp; Pair</label><select id="market"><option value="spot:XBTUSD">SPOT · BTC/USD (XBTUSD)</option><option value="spot:ETHUSD">SPOT · ETH/USD</option><option value="spot:SOLUSD">SPOT · SOL/USD</option><option selected="" value="futures:PF_XBTUSD">FUTURES · BTC/USD Perpetual Linear (PF_XBTUSD)</option></select></div><div class="field"><label>Timeframe</label><select id="tf"><option value="15">15m</option><option selected="" value="60">1H</option><option value="240">4H</option></select></div><button class="primary" id="fetch">↻ Muat data</button><span class="chip" id="health">BELUM TERHUBUNG</span></div></div></header>
+</style></head><body><header><div class="bar"><div><h1>FMY<b>01</b> <span style="font-size:12px;color:#a4bad2">/ TERMINAL V5.0 RC3 · SERVER VALIDATION</span></h1><small>MARKET DATA · RULE-BASED SIGNAL · PAPER ONLY</small></div><div class="flex"><div class="field"><label>Market &amp; Pair</label><select id="market"><option value="spot:XBTUSD">SPOT · BTC/USD (XBTUSD)</option><option value="spot:ETHUSD">SPOT · ETH/USD</option><option value="spot:SOLUSD">SPOT · SOL/USD</option><option selected="" value="futures:PF_XBTUSD">FUTURES · BTC/USD Perpetual Linear (PF_XBTUSD)</option></select></div><div class="field"><label>Timeframe</label><select id="tf"><option value="15">15m</option><option selected="" value="60">1H</option><option value="240">4H</option></select></div><button class="primary" id="fetch">↻ Muat data</button><span class="chip" id="health">BELUM TERHUBUNG</span></div></div></header>
 <main><div class="notice">⚠️ SIMULASI — tanpa API key dan tanpa order nyata. Harga spot, futures dan USDT bukan hal yang sama. Sinyal dari candle selesai; ticker untuk harga terkini. Paper monitoring hanya berjalan selama halaman aktif, tanpa jaminan eksekusi TP/SL di pasar nyata.</div><div class="between"><div><div class="status" id="status">Menyiapkan sumber pasar…</div><div class="status" id="alert"></div></div><div class="actions"><button id="csvbtn">Impor CSV</button><input accept=".csv,text/csv" hidden="" id="csv" type="file"/><button id="export">Ekspor jurnal</button></div></div>
 <div class="metrics"><div class="metric"><small>LIVE LAST / TICKER</small><strong id="tickerPrice">—</strong><small id="tickerTime">Belum ada ticker</small></div><div class="metric"><small>CLOSED CANDLE</small><strong id="closePrice">—</strong><small id="candleTime">Belum ada candle</small></div><div class="metric"><small>TREND EMA20 / EMA50</small><strong id="trend">—</strong><small id="emas">—</small></div><div class="metric"><small>RSI14 · ATR14</small><strong id="rsiatr">—</strong><small id="source">—</small></div></div>
 <div class="columns"><div class="panel"><div class="between"><h2>MARKET CHART</h2><span class="tag" id="series">—</span></div><div class="chart"><canvas id="chart" style="width:100%;height:100%"></canvas></div><p class="note">Grafik menampilkan candle yang sudah ditutup. Ticker di atas berasal dari permintaan data terpisah. Timestamp candle menunjukkan awal interval, dalam WIB.</p></div><div class="panel"><div class="between"><h2>DECISION ENGINE</h2><span class="tag">RULE BASED</span></div><small>Layer A (tren) + B (struktur) + C (ADX/volume) + Risk Gate</small><div class="signal yellow" id="signal">WAIT</div><div class="mini" style="margin:7px 0"><small>Confidence Score (bukan peluang menang)</small><strong id="mainConfidence">—</strong></div><p class="note" id="reason">Menunggu data.</p><div class="info"><div><label>Entry referensi</label><strong id="entry">—</strong></div><div><label>Stop loss</label><strong id="sl">—</strong></div><div><label>Take profit</label><strong id="tp">—</strong></div><div><label>Risk : Reward</label><strong>1 : 2</strong></div></div><p class="note">Bukan prediksi kepastian. WAIT dapat menjadi pilihan terbaik. Skor bukan probabilitas menang. Konfirmasi 4H hanya dari candle yang sudah ditutup.</p></div></div><section class="panel v4panel" id="v4panel"><div class="between"><h2>FMY01 V5 · SMART QUANT ENGINE · KANDIDAT UJI</h2><span class="tag">RULE BASED · PAPER ONLY</span></div><p class="note">Konfirmasi tren menggunakan candle 4H yang sudah selesai. Skor adalah aturan heuristik, <b>bukan</b> probabilitas menang. Jika data 4H tidak tersedia, sinyal otomatis WAIT.</p><div class="v4grid"><div class="mini"><small>Konfirmasi 4H</small><strong id="v4trend">Menunggu data</strong></div><div class="mini"><small>Confidence Score (kesesuaian aturan)</small><strong id="v4score">—</strong></div><div class="mini"><small>Keputusan terfilter</small><strong id="v4decision">WAIT</strong></div><div class="mini"><small>Status 4H</small><strong id="v4fresh">—</strong></div></div><hr style="border:0;border-top:1px solid var(--stroke);margin:18px 0"/><h2>RISK CALCULATOR · SIMULASI</h2><div class="v4row"><div><label>Modal simulasi (USD)</label><input id="v4capital" min="10" step="50" type="number" value="1000"/></div><div><label>Risiko (%) / posisi</label><input id="v4risk" max="3" min="0.1" step="0.1" type="number" value="0.5"/></div><div><label>Max nominal posisi / modal (×)</label><input id="v4max" max="1" min="0.1" step="0.1" type="number" value="1"/></div></div><div class="v4grid"><div class="mini"><small>Entry estimasi (bid/ask)</small><strong id="v4entry">—</strong></div><div class="mini"><small>SL / TP</small><strong id="v4stops">—</strong></div><div class="mini"><small>Jumlah BTC (simulasi spot-equivalent)</small><strong id="v4qty">—</strong></div><div class="mini"><small>Perkiraan rugi di SL termasuk biaya</small><strong id="v4loss">—</strong></div></div><p class="v4warning" id="v4explain">Menunggu data. Tanpa asumsi leverage, margin, likuidasi, dan funding; jangan gunakan nominal ini sebagai ukuran kontrak futures nyata.</p></section>
@@ -37,6 +41,14 @@
   <p id="bridgeNote" style="font-size:13px;opacity:.83">Kamu tetap harus mengisi kunci dan klik Aktifkan di Alert Manager. Alert ini tidak menutup order exchange.</p>
 </section>
 
+<section class="panel" id="v5serverPanel" style="border-color:#1e8d9a;margin:14px 0">
+<div class="between"><h2>☁ FMY01 V5 RC3 · SERVER MONITOR</h2><span class="tag">CLOUDFLARE · PAPER ONLY</span></div>
+<p class="note">Pemantauan server berbeda dari Auto Scan lokal di bawah. Server berjalan melalui Cron Cloudflare ketika diaktifkan, meski tablet ditutup. Pemeriksaan setiap 5 menit dapat melewatkan pergerakan cepat; bukan proteksi posisi riil.</p>
+<div class="info"><div><label>Status server</label><strong id="v5SrvStatus">Memeriksa…</strong></div><div><label>Scan terakhir</label><strong id="v5SrvLast">—</strong></div><div><label>Keputusan server</label><strong id="v5SrvSignal">—</strong></div><div><label>Paper order server</label><strong id="v5SrvOrder">—</strong></div></div>
+<p class="status" id="v5SrvInfo">Membaca status Cloudflare…</p>
+<div class="actions" style="margin-top:12px"><button type="button" id="v5SrvReload" class="primary">↻ Periksa status server</button><a href="https://fmy01-market-api.nusaekanusantara.workers.dev/v5/manage" target="_blank" rel="noopener noreferrer" style="display:inline-block;background:#154d71;color:white;text-decoration:none;padding:12px;border-radius:8px">⚙ Buka Server Control</a></div>
+<p class="note">ON/OFF server dan konfirmasi membuat paper order hanya melalui Server Control dengan ALERT_TEST_KEY. Kunci tidak disimpan di halaman publik. Jurnal browser RC2 tetap terpisah dan tidak boleh digabung dengan jurnal server.</p>
+</section>
 <section class="panel" id="v5module" style="margin:14px 0;border-color:#397b91">
  <div class="between"><h2>V5 RC2 · ENTRY PLAN 4H → 1H → 15M</h2><span class="tag">PAPER ONLY · LOKAL</span></div>
  <p class="note">Harga rencana entry berasal dari analisis dan trigger candle <b>15 menit yang sudah ditutup</b>. Paper LIMIT harus PENDING dulu; posisi OPEN hanya saat harga simulasi memenuhi kondisi fill. Status di sini disimpan di browser ini saja; <b>ketika tab tertutup pemantauan berhenti dan pergerakan intrabar mungkin terlewat</b>. Belum terhubung otomatis dengan Telegram/Worker.</p>
@@ -583,4 +595,32 @@ $('histPdf').onclick=fmyHistoryReportPdf;
  display();autoUi();if(autoOn)autoTick(true);
 })();
 </script>
-</body></html>
+<script>
+// Read-only V5 server monitoring (no credentials in GitHub/public browser).
+(()=>{
+ const url='https://fmy01-market-api.nusaekanusantara.workers.dev/v5/status';
+ const $=id=>document.getElementById(id);
+ const fmt=t=>t?new Date(t).toLocaleString('id-ID',{timeZone:'Asia/Jakarta'})+' WIB':'Belum ada';
+ let busy=false;
+ async function refresh(){if(busy)return;busy=true;$('v5SrvReload').disabled=true;
+  try{const ctl=new AbortController(),timer=setTimeout(()=>ctl.abort(),12000);
+   let r;try{r=await fetch(url,{cache:'no-store',signal:ctl.signal})}finally{clearTimeout(timer)}
+   if(!r.ok)throw Error('HTTP '+r.status);
+   const d=await r.json();if(!d.ok)throw Error(d.error||'Server error');
+   const isFresh=Number.isFinite(d.lastRun)&&Date.now()-d.lastRun<12*60000;
+   $('v5SrvStatus').textContent=!d.scanEnabled?'SCAN OFF':!isFresh?'STALE — PERIKSA CRON':'MONITORING — AKTIF SERVER';
+   $('v5SrvLast').textContent=fmt(d.lastScan);
+   $('v5SrvSignal').textContent=(d.signal||'WAIT')+(Number.isFinite(d.score)?' · '+d.score+'% skor aturan':'');
+   $('v5SrvOrder').textContent=d.order?(d.order.side+' · '+d.order.status+' · LIMIT $'+Number(d.order.entry).toFixed(2)):'NONE';
+   $('v5SrvInfo').textContent=d.lastError?'PERINGATAN: '+d.lastError:(d.reason||'Tidak ada setup baru.')+' · Server terakhir berjalan: '+fmt(d.lastRun);
+  }catch(e){$('v5SrvStatus').textContent='ERROR / BELUM SIAP';$('v5SrvInfo').textContent='Tidak dapat membaca Worker V5: '+e.message}
+  finally{busy=false;$('v5SrvReload').disabled=false}
+ }
+ $('v5SrvReload').addEventListener('click',refresh);
+ setInterval(()=>{if(!document.hidden)refresh()},60000);refresh();
+})();
+</script></body></html>
+
+
+
+
