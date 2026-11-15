@@ -1,7 +1,3 @@
-
-
-
-
 <!DOCTYPE html>
 
 <html lang="id"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/><meta content="#08111e" name="theme-color"/><title>FMY01 V4 | Futures Trading Intelligence</title><style>
@@ -11,7 +7,7 @@
 
 .fmy-print-report{display:none}@media print{body{background:white!important;color:#111!important;font:10px Arial,sans-serif!important}body>*:not(.fmy-print-report){display:none!important}.fmy-print-report{display:block!important;padding:10mm}.fmy-print-report h1{font-size:19px;color:#111!important}.fmy-print-report p{font-size:10px;line-height:1.45;color:#333}.fmy-print-report .print-summary{display:flex;flex-wrap:wrap;gap:8px;margin:15px 0}.fmy-print-report .print-summary b{padding:6px;border:1px solid #888}.fmy-print-report table{width:100%;font-size:9px;border-collapse:collapse}.fmy-print-report th,.fmy-print-report td{white-space:normal;color:#111!important;border:1px solid #888;padding:5px;overflow-wrap:anywhere} @page{size:A4 landscape;margin:12mm}}
 @media print {body:has(#v5Print) > *:not(#v5Print){display:none!important}#v5Print{display:block!important;background:white;color:black;padding:12px}#v5Print table{width:100%;border-collapse:collapse}#v5Print td,#v5Print th{border:1px solid #bbb;padding:5px;color:black}#v5Print p{color:black}}
-</style></head><body><header><div class="bar"><div><h1>FMY<b>01</b> <span style="font-size:12px;color:#a4bad2">/ TERMINAL V5.0 RC1 · 15M PAPER VALIDATION</span></h1><small>MARKET DATA · RULE-BASED SIGNAL · PAPER ONLY</small></div><div class="flex"><div class="field"><label>Market &amp; Pair</label><select id="market"><option value="spot:XBTUSD">SPOT · BTC/USD (XBTUSD)</option><option value="spot:ETHUSD">SPOT · ETH/USD</option><option value="spot:SOLUSD">SPOT · SOL/USD</option><option selected="" value="futures:PF_XBTUSD">FUTURES · BTC/USD Perpetual Linear (PF_XBTUSD)</option></select></div><div class="field"><label>Timeframe</label><select id="tf"><option value="15">15m</option><option selected="" value="60">1H</option><option value="240">4H</option></select></div><button class="primary" id="fetch">↻ Muat data</button><span class="chip" id="health">BELUM TERHUBUNG</span></div></div></header>
+</style></head><body><header><div class="bar"><div><h1>FMY<b>01</b> <span style="font-size:12px;color:#a4bad2">/ TERMINAL V5.0 RC2 · AUTO SCAN VALIDATION</span></h1><small>MARKET DATA · RULE-BASED SIGNAL · PAPER ONLY</small></div><div class="flex"><div class="field"><label>Market &amp; Pair</label><select id="market"><option value="spot:XBTUSD">SPOT · BTC/USD (XBTUSD)</option><option value="spot:ETHUSD">SPOT · ETH/USD</option><option value="spot:SOLUSD">SPOT · SOL/USD</option><option selected="" value="futures:PF_XBTUSD">FUTURES · BTC/USD Perpetual Linear (PF_XBTUSD)</option></select></div><div class="field"><label>Timeframe</label><select id="tf"><option value="15">15m</option><option selected="" value="60">1H</option><option value="240">4H</option></select></div><button class="primary" id="fetch">↻ Muat data</button><span class="chip" id="health">BELUM TERHUBUNG</span></div></div></header>
 <main><div class="notice">⚠️ SIMULASI — tanpa API key dan tanpa order nyata. Harga spot, futures dan USDT bukan hal yang sama. Sinyal dari candle selesai; ticker untuk harga terkini. Paper monitoring hanya berjalan selama halaman aktif, tanpa jaminan eksekusi TP/SL di pasar nyata.</div><div class="between"><div><div class="status" id="status">Menyiapkan sumber pasar…</div><div class="status" id="alert"></div></div><div class="actions"><button id="csvbtn">Impor CSV</button><input accept=".csv,text/csv" hidden="" id="csv" type="file"/><button id="export">Ekspor jurnal</button></div></div>
 <div class="metrics"><div class="metric"><small>LIVE LAST / TICKER</small><strong id="tickerPrice">—</strong><small id="tickerTime">Belum ada ticker</small></div><div class="metric"><small>CLOSED CANDLE</small><strong id="closePrice">—</strong><small id="candleTime">Belum ada candle</small></div><div class="metric"><small>TREND EMA20 / EMA50</small><strong id="trend">—</strong><small id="emas">—</small></div><div class="metric"><small>RSI14 · ATR14</small><strong id="rsiatr">—</strong><small id="source">—</small></div></div>
 <div class="columns"><div class="panel"><div class="between"><h2>MARKET CHART</h2><span class="tag" id="series">—</span></div><div class="chart"><canvas id="chart" style="width:100%;height:100%"></canvas></div><p class="note">Grafik menampilkan candle yang sudah ditutup. Ticker di atas berasal dari permintaan data terpisah. Timestamp candle menunjukkan awal interval, dalam WIB.</p></div><div class="panel"><div class="between"><h2>DECISION ENGINE</h2><span class="tag">RULE BASED</span></div><small>Layer A (tren) + B (struktur) + C (ADX/volume) + Risk Gate</small><div class="signal yellow" id="signal">WAIT</div><div class="mini" style="margin:7px 0"><small>Confidence Score (bukan peluang menang)</small><strong id="mainConfidence">—</strong></div><p class="note" id="reason">Menunggu data.</p><div class="info"><div><label>Entry referensi</label><strong id="entry">—</strong></div><div><label>Stop loss</label><strong id="sl">—</strong></div><div><label>Take profit</label><strong id="tp">—</strong></div><div><label>Risk : Reward</label><strong>1 : 2</strong></div></div><p class="note">Bukan prediksi kepastian. WAIT dapat menjadi pilihan terbaik. Skor bukan probabilitas menang. Konfirmasi 4H hanya dari candle yang sudah ditutup.</p></div></div><section class="panel v4panel" id="v4panel"><div class="between"><h2>FMY01 V5 · SMART QUANT ENGINE · KANDIDAT UJI</h2><span class="tag">RULE BASED · PAPER ONLY</span></div><p class="note">Konfirmasi tren menggunakan candle 4H yang sudah selesai. Skor adalah aturan heuristik, <b>bukan</b> probabilitas menang. Jika data 4H tidak tersedia, sinyal otomatis WAIT.</p><div class="v4grid"><div class="mini"><small>Konfirmasi 4H</small><strong id="v4trend">Menunggu data</strong></div><div class="mini"><small>Confidence Score (kesesuaian aturan)</small><strong id="v4score">—</strong></div><div class="mini"><small>Keputusan terfilter</small><strong id="v4decision">WAIT</strong></div><div class="mini"><small>Status 4H</small><strong id="v4fresh">—</strong></div></div><hr style="border:0;border-top:1px solid var(--stroke);margin:18px 0"/><h2>RISK CALCULATOR · SIMULASI</h2><div class="v4row"><div><label>Modal simulasi (USD)</label><input id="v4capital" min="10" step="50" type="number" value="1000"/></div><div><label>Risiko (%) / posisi</label><input id="v4risk" max="3" min="0.1" step="0.1" type="number" value="0.5"/></div><div><label>Max nominal posisi / modal (×)</label><input id="v4max" max="1" min="0.1" step="0.1" type="number" value="1"/></div></div><div class="v4grid"><div class="mini"><small>Entry estimasi (bid/ask)</small><strong id="v4entry">—</strong></div><div class="mini"><small>SL / TP</small><strong id="v4stops">—</strong></div><div class="mini"><small>Jumlah BTC (simulasi spot-equivalent)</small><strong id="v4qty">—</strong></div><div class="mini"><small>Perkiraan rugi di SL termasuk biaya</small><strong id="v4loss">—</strong></div></div><p class="v4warning" id="v4explain">Menunggu data. Tanpa asumsi leverage, margin, likuidasi, dan funding; jangan gunakan nominal ini sebagai ukuran kontrak futures nyata.</p></section>
@@ -42,8 +38,18 @@
 </section>
 
 <section class="panel" id="v5module" style="margin:14px 0;border-color:#397b91">
- <div class="between"><h2>V5 RC1 · ENTRY PLAN 4H → 1H → 15M</h2><span class="tag">PAPER ONLY · LOKAL</span></div>
+ <div class="between"><h2>V5 RC2 · ENTRY PLAN 4H → 1H → 15M</h2><span class="tag">PAPER ONLY · LOKAL</span></div>
  <p class="note">Harga rencana entry berasal dari analisis dan trigger candle <b>15 menit yang sudah ditutup</b>. Paper LIMIT harus PENDING dulu; posisi OPEN hanya saat harga simulasi memenuhi kondisi fill. Status di sini disimpan di browser ini saja; <b>ketika tab tertutup pemantauan berhenti dan pergerakan intrabar mungkin terlewat</b>. Belum terhubung otomatis dengan Telegram/Worker.</p>
+ <div id="v5MonitorBox" style="border:1px solid var(--stroke);border-radius:12px;padding:13px;background:#0c1e30;margin:12px 0" aria-live="polite">
+  <div class="between"><div><strong>◉ AUTO SCAN 15M · LOKAL</strong><p class="note" style="margin:4px 0">Mencari setup otomatis hanya ketika dashboard terbuka. Tidak membuat paper order tanpa konfirmasi.</p></div><button id="v5AutoToggle" type="button" aria-pressed="false" class="primary">AKTIFKAN AUTO SCAN</button></div>
+  <div class="v4grid" style="margin-top:11px">
+    <div class="mini"><small>Status mesin</small><strong id="v5AutoStatus" role="status">OFF — DIJEDA</strong></div>
+    <div class="mini"><small>Pemeriksaan terakhir (WIB)</small><strong id="v5AutoLast">Belum ada</strong></div>
+    <div class="mini"><small>Jadwal berikutnya</small><strong id="v5AutoNext">—</strong></div>
+    <div class="mini"><small>Koneksi / keterangan</small><strong id="v5AutoInfo">Tidak memindai</strong></div>
+  </div>
+  <p class="note" style="margin:8px 0 0;color:#f5c66d"><b>Penting:</b> ON/OFF mengatur pencarian setup, bukan mematikan pengawasan order lokal yang PENDING/OPEN. Saat tab ditutup, seluruh pemantauan lokal berhenti. Belum ada auto scan server/Telegram V5.</p>
+ </div>
  <div class="v4grid">
   <div class="mini"><small>Keputusan akhir 4H/1H/15M</small><strong id="v5Decision">WAIT</strong></div>
   <div class="mini"><small>Confidence (skor aturan)</small><strong id="v5Score">—</strong></div>
@@ -68,7 +74,7 @@
 <section class="panel"><div class="between"><h2>JURNAL LEGACY V4.4</h2><small>Storage lokal · tidak sinkron</small></div><div class="v4grid" id="journalSummary" style="margin:12px 0"><div class="mini"><small>Trade ditutup</small><strong id="jClosed">0</strong></div><div class="mini"><small>Win rate REALIZED</small><strong id="jWin">—</strong></div><div class="mini"><small>Net P&amp;L closed</small><strong id="jNet">—</strong></div><div class="mini"><small>Posisi aktif</small><strong id="jOpen">0</strong></div></div>
 <p class="note">Win rate = jumlah transaksi ditutup dengan P&amp;L positif / seluruh transaksi ditutup. Posisi OPEN tidak dihitung. Hasil dari browser/perangkat ini saja; bukan backtest dan bukan bukti profitabilitas.</p>
 <div class="actions" style="margin:10px 0"><button class="primary" id="exportPdf" type="button">⬇ Ekspor laporan PDF</button><button id="selfTest" type="button">✓ Uji hitungan jurnal</button><button id="engineTest" type="button">🧪 Uji mesin A/B/C</button></div><p id="journalTestStatus" class="status">Uji perhitungan tersedia tanpa membuka transaksi.</p>
-<div class="scroll"><table><thead><tr><th>Waktu (WIB)</th><th>Market</th><th>Side</th><th>Entry</th><th>Exit</th><th>P&amp;L</th><th>Status</th></tr></thead><tbody id="journal"><tr><td colspan="7">Belum ada transaksi</td></tr></tbody></table></div></section><div class="foot">FMY01 V5.0 RC1 · Kandidat uji pending order, bukan rilis final · Kraken Spot / Kraken Futures Public API. Futures tidak identik dengan spot; CSV harus berasal dari market yang sesuai. Aplikasi tidak menjalankan tugas ketika halaman ditutup. Untuk pemantauan 24/7 diperlukan backend terpisah. Confidence Score adalah heuristik, bukan AI atau probabilitas kemenangan. Konfirmasi 4H yang digunakan adalah candle 4H yang sudah tutup. </div></main>
+<div class="scroll"><table><thead><tr><th>Waktu (WIB)</th><th>Market</th><th>Side</th><th>Entry</th><th>Exit</th><th>P&amp;L</th><th>Status</th></tr></thead><tbody id="journal"><tr><td colspan="7">Belum ada transaksi</td></tr></tbody></table></div></section><div class="foot">FMY01 V5.0 RC2 · Kandidat uji Auto Scan lokal dan pending order, bukan rilis final · Kraken Spot / Kraken Futures Public API. Futures tidak identik dengan spot; CSV harus berasal dari market yang sesuai. Aplikasi tidak menjalankan tugas ketika halaman ditutup. Untuk pemantauan 24/7 diperlukan backend terpisah. Confidence Score adalah heuristik, bukan AI atau probabilitas kemenangan. Konfirmasi 4H yang digunakan adalah candle 4H yang sudah tutup. </div></main>
 <script>
 'use strict';
 const $=id=>document.getElementById(id), money=n=>Number.isFinite(n)?'$'+n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}):'—',percentage=n=>Number.isFinite(n)?n.toFixed(2)+'%':'—';
@@ -415,13 +421,16 @@ $('histPdf').onclick=fmyHistoryReportPdf;
 
 </script>
 <script>
-// FMY01 V5 RC1 local paper validation module. No keys, no live orders.
+// FMY01 V5 RC2 local paper validation module. No keys, no live orders.
 'use strict';
 (() => {
  const el=id=>document.getElementById(id), msg=(id,v)=>{el(id).textContent=String(v)};
  const storeKey='fmy01-v5-rc1-local';
  const load=()=>{try{const v=JSON.parse(localStorage.getItem(storeKey));if(v&&Array.isArray(v.history)&&Number.isFinite(v.cash)&&v.cash>=0)return v}catch{}return {cash:1000,order:null,history:[]}};
  let ledger=load(),proposal=null,fetchBusy=false,lastEvaluation=0,sourceStamp=0,lastMarketKey='';
+ const autoKey='fmy01-v5-rc2-autoscan-local';
+ let autoOn=false,autoPhase='OFF',autoError='',autoLastOk=0,autoLastAttempt=0,autoCandleSlot=-1;
+ try{autoOn=localStorage.getItem(autoKey)==='on'}catch{}
  const save5=()=>localStorage.setItem(storeKey,JSON.stringify(ledger));
  const fmt=n=>Number.isFinite(n)?'$'+n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}):'—';
  const time=t=>new Date(t).toLocaleString('id-ID',{timeZone:'Asia/Jakarta'});
@@ -460,6 +469,34 @@ $('histPdf').onclick=fmyHistoryReportPdf;
   const id=side+':'+last15.t+':'+entry.toFixed(2);
   return {side,candidate:side,score,regime,entry,sl,tp,rr:2,at:cut,id,why:'Setup 1H + konfirmasi 4H + trigger 15M; LIMIT pullback; pemeriksaan pivot S/R sederhana.'};
  }
+ function scanSlot(t=Date.now()){return Math.floor((t-20000)/(15*60000))} // 20s after each candle boundary
+ function autoUi(){
+  const now=Date.now(),fmtTime=t=>t?time(t)+' WIB':'Belum ada';
+  const effective=!autoOn?'OFF':document.hidden?'PAUSED':fetchBusy?'ANALYZING':autoPhase==='ERROR'?'ERROR':autoLastOk&&now-autoLastOk>25*60000?'STALE':autoLastOk?'MONITORING':'MENUNGGU';
+  msg('v5AutoStatus',({OFF:'OFF — DIJEDA',PAUSED:'PAUSED — TAB TIDAK AKTIF',ANALYZING:'ANALYZING — SEDANG MEMBACA',ERROR:'ERROR — PERIKSA KONEKSI',STALE:'STALE — DATA TERLAMBAT',MONITORING:'MONITORING — AKTIF LOKAL',MENUNGGU:'MENUNGGU PEMERIKSAAN'})[effective]);
+  msg('v5AutoLast',fmtTime(autoLastOk));
+  let next=autoOn&&!document.hidden?(Math.floor((now-20000)/(15*60000))+1)*15*60000+20000:0;
+  msg('v5AutoNext',next?fmtTime(next):'—');
+  msg('v5AutoInfo',effective==='ERROR'?autoError:effective==='MONITORING'?'Candle terakhir sudah dipindai':effective==='ANALYZING'?'Permintaan data sedang diproses':effective==='STALE'?'Periksa data, bisa kedaluwarsa':effective==='PAUSED'?'Buka tab untuk lanjut':effective==='OFF'?'Auto Scan tidak aktif':'Menunggu candle selesai');
+  const btn=el('v5AutoToggle');btn.textContent=autoOn?'JEDA AUTO SCAN':'AKTIFKAN AUTO SCAN';btn.setAttribute('aria-pressed',autoOn?'true':'false');btn.className=autoOn?'danger':'primary';
+  const check=el('v5Check');check.disabled=fetchBusy;check.textContent=fetchBusy?'⏳ Sedang menganalisis…':'↻ Analisis Sekarang (manual)';
+ }
+ async function autoTick(force=false){
+  autoUi();if(!autoOn||document.hidden||fetchBusy)return;
+  const slot=scanSlot(),now=Date.now();
+  if(!force&&(autoCandleSlot===slot||now-autoLastAttempt<30000))return;
+  // When there is no loaded 1H/4H data, use existing regular dashboard reload rather than pretending server monitoring.
+  if(config().key!=='futures:PF_XBTUSD'||config().tf!==60||datasetKey!==config().key||!confirmOK){
+   autoPhase='ERROR';autoError='Pilih PF_XBTUSD, timeframe 1H, lalu tekan Muat data';autoUi();return;
+  }
+  autoLastAttempt=now;autoCandleSlot=slot;
+  await evaluate();
+ }
+ function toggleAuto(){
+  autoOn=!autoOn;try{localStorage.setItem(autoKey,autoOn?'on':'off')}catch{}
+  autoPhase=autoOn?'MENUNGGU':'OFF';autoError='';
+  autoUi();if(autoOn)autoTick(true);
+ }
  function display(){
   const o=ledger.order;
   msg('v5Status',o?o.status:'NONE');msg('v5Cash',fmt(ledger.cash));msg('v5Fill',o?.fill?fmt(o.fill):'—');
@@ -468,7 +505,7 @@ $('histPdf').onclick=fmyHistoryReportPdf;
   const rows=[...ledger.history];if(o)rows.push(o);const t=el('v5Journal');t.replaceChildren();
   for(const x of rows.reverse().slice(0,100)){const tr=document.createElement('tr');for(const value of [time(x.created),x.side,fmt(x.entry),fmt(x.fill),fmt(x.exit),fmt(x.pnl),x.status]){const td=document.createElement('td');td.textContent=value;tr.append(td)}t.append(tr)}
   if(!rows.length){t.innerHTML='<tr><td colspan="7">Belum ada order V5</td></tr>'}
-  msg('v5OrderStatus',o?`${o.side} ${o.status} · LIMIT ${fmt(o.entry)} · SL ${fmt(o.sl)} · TP ${fmt(o.tp)} · berakhir ${time(o.expires)} WIB`:'Tidak ada pending/open V5. Monitoring hanya ketika tab aktif.');
+  msg('v5OrderStatus',o?`${o.side} ${o.status} · LIMIT ${fmt(o.entry)} · SL ${fmt(o.sl)} · TP ${fmt(o.tp)} · berakhir ${time(o.expires)} WIB`:'Tidak ada pending/open V5. Pemantauan posisi V5 hanya saat tab aktif.');
  }
  function settle(o,px,reason,at){
   const execution=reason==='SL'? (o.side==='LONG'?Math.min(px,o.sl):Math.max(px,o.sl)) :reason==='TP'?(o.side==='LONG'?Math.min(px,o.tp):Math.max(px,o.tp)):px;
@@ -494,7 +531,7 @@ $('histPdf').onclick=fmyHistoryReportPdf;
   save5();display();
  }
  async function evaluate(){
-  if(fetchBusy)return;fetchBusy=true;el('v5Check').disabled=true;
+  if(fetchBusy)return;fetchBusy=true;autoPhase='ANALYZING';autoError='';autoLastAttempt=Date.now();autoUi();
   try{
    if(config().key!=='futures:PF_XBTUSD'||config().tf!==60||datasetKey!==config().key||!confirmOK)throw Error('Pilih Futures PF_XBTUSD dan timeframe 1H; muat data terlebih dahulu');
    const resp=await fetch(FUTURES_WORKER+'/candles?interval=15m',{cache:'no-store'});if(!resp.ok)throw Error('Candle 15M HTTP '+resp.status);
@@ -505,9 +542,9 @@ $('histPdf').onclick=fmyHistoryReportPdf;
    proposal=makeDecision(fifteen,bars,confirm4h);sourceStamp=Date.now();lastMarketKey=config().key;
    msg('v5Decision',proposal.side);msg('v5Score',proposal.score+'% · bukan peluang menang');msg('v5Regime',proposal.regime);msg('v5Trigger',time(fifteen.at(-1).t+900000)+' WIB');
    msg('v5Why',proposal.why);msg('v5Entry',fmt(proposal.entry));msg('v5SL',fmt(proposal.sl));msg('v5TP',fmt(proposal.tp));msg('v5RR',proposal.rr?'1 : '+proposal.rr:'—');
-   lastEvaluation=Date.now();
-  }catch(err){proposal=null;msg('v5Decision','WAIT');msg('v5Why','Tidak siap: '+err.message);msg('v5Entry','—');msg('v5SL','—');msg('v5TP','—');}
-  finally{fetchBusy=false;el('v5Check').disabled=false}
+   lastEvaluation=Date.now();autoLastOk=lastEvaluation;autoPhase='MONITORING';autoCandleSlot=scanSlot();
+  }catch(err){proposal=null;autoPhase='ERROR';autoError=String(err.message||err);autoCandleSlot=-1;msg('v5Decision','WAIT');msg('v5Score','—');msg('v5Regime','—');msg('v5Trigger','—');msg('v5Why','Tidak siap: '+err.message);msg('v5Entry','—');msg('v5SL','—');msg('v5TP','—');msg('v5RR','—');}
+  finally{fetchBusy=false;autoUi()}
  }
  function place(){
   if(ledger.order)return alert('Sudah ada order V5 PENDING/OPEN');
@@ -530,7 +567,7 @@ $('histPdf').onclick=fmyHistoryReportPdf;
   const rows=ledger.history.filter(x=>x.status.startsWith('CLOSED'));const wins=rows.filter(x=>x.pnl>0).length,net=rows.reduce((n,x)=>n+x.pnl,0);
   const escape=s=>String(s??'').replace(/[&<>"']/g,x=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[x]));
   document.getElementById('v5Print')?.remove();const wrap=document.createElement('section');wrap.id='v5Print';wrap.className='fmy-print-report';
-  wrap.innerHTML='<h1>FMY01 V5 RC1 — Jurnal Paper Order</h1><p>Dicetak '+escape(time(Date.now()))+' WIB · Lokal/browser · BUKAN transaksi bursa</p><p>Closed '+rows.length+' · Win '+wins+' · Win rate '+(rows.length?(100*wins/rows.length).toFixed(2)+'%':'—')+' · Net P&L '+escape(fmt(net))+' · Pending/Open '+(ledger.order?ledger.order.status:'NONE')+'</p><table><thead><tr><th>Waktu</th><th>Side</th><th>Entry rencana</th><th>Fill</th><th>Exit</th><th>P&amp;L</th><th>Status</th></tr></thead><tbody>'+ledger.history.map(x=>'<tr>'+[time(x.created),x.side,fmt(x.entry),fmt(x.fill),fmt(x.exit),fmt(x.pnl),x.status].map(v=>'<td>'+escape(v)+'</td>').join('')+'</tr>').join('')+'</tbody></table><p>Entry LIMIT disimulasikan dari snapshot ticker sewaktu tab aktif. Tick hilang, slippage saat gap, funding, likuidasi dan perilaku matching engine bursa tidak dimodelkan. Confidence adalah skor aturan, bukan win probability. Hasil tidak dapat dipakai sebagai klaim profit.</p>';
+  wrap.innerHTML='<h1>FMY01 V5 RC2 — Jurnal Paper Order</h1><p>Dicetak '+escape(time(Date.now()))+' WIB · Lokal/browser · BUKAN transaksi bursa</p><p>Closed '+rows.length+' · Win '+wins+' · Win rate '+(rows.length?(100*wins/rows.length).toFixed(2)+'%':'—')+' · Net P&L '+escape(fmt(net))+' · Pending/Open '+(ledger.order?ledger.order.status:'NONE')+'</p><table><thead><tr><th>Waktu</th><th>Side</th><th>Entry rencana</th><th>Fill</th><th>Exit</th><th>P&amp;L</th><th>Status</th></tr></thead><tbody>'+ledger.history.map(x=>'<tr>'+[time(x.created),x.side,fmt(x.entry),fmt(x.fill),fmt(x.exit),fmt(x.pnl),x.status].map(v=>'<td>'+escape(v)+'</td>').join('')+'</tr>').join('')+'</tbody></table><p>Entry LIMIT disimulasikan dari snapshot ticker sewaktu tab aktif. Tick hilang, slippage saat gap, funding, likuidasi dan perilaku matching engine bursa tidak dimodelkan. Confidence adalah skor aturan, bukan win probability. Hasil tidak dapat dipakai sebagai klaim profit.</p>';
   document.body.append(wrap);window.print();
  }
  function test(){
@@ -538,14 +575,12 @@ $('histPdf').onclick=fmyHistoryReportPdf;
   const checks=[['SL SHORT di atas entry',sample.sl>sample.entry],['TP SHORT di bawah entry',sample.tp<sample.entry],['SHORT tidak fill di bid 99',!(99>=sample.entry)],['SHORT fill di bid 101',price>=sample.entry],['Loss tidak termasuk pending',!sample.pnl],['WAIT tidak dapat membuat rencana tanpa level',!Number.isFinite(undefined)]];
   msg('v5TestStatus',(checks.every(v=>v[1])?'LULUS':'GAGAL')+' · '+checks.map(v=>v[0]+' '+(v[1]?'OK':'ERROR')).join(' · '));
  }
- el('v5Check').onclick=evaluate;el('v5Place').onclick=place;el('v5Cancel').onclick=cancel;el('v5Close').onclick=close;el('v5Csv').onclick=csv;el('v5Pdf').onclick=pdf;el('v5Test').onclick=test;
+ el('v5AutoToggle').onclick=toggleAuto;el('v5Check').onclick=evaluate;el('v5Place').onclick=place;el('v5Cancel').onclick=cancel;el('v5Close').onclick=close;el('v5Csv').onclick=csv;el('v5Pdf').onclick=pdf;el('v5Test').onclick=test;
  setInterval(()=>{if(!document.hidden)reconcile()},3000);
- window.addEventListener('storage',e=>{if(e.key===storeKey){ledger=load();display()}});
- display();
+ setInterval(()=>{autoTick().catch(e=>{autoPhase='ERROR';autoError=String(e);autoUi()});autoUi()},10000);
+ document.addEventListener('visibilitychange',()=>{autoUi();if(!document.hidden)autoTick(true)});
+ window.addEventListener('storage',e=>{if(e.key===storeKey){ledger=load();display()}if(e.key===autoKey){autoOn=e.newValue==='on';autoUi()}});
+ display();autoUi();if(autoOn)autoTick(true);
 })();
 </script>
 </body></html>
-
-
-
-
